@@ -2,6 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    dd(request()->getHost());
+Route::get('/tenant/register', function () {
+    return "signup a new tenant";
 });
