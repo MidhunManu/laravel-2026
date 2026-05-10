@@ -23,7 +23,6 @@ class OtpVerificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id'   => 'integer|required', 
             'otp'       => 'string:size:6',
         ];
     }

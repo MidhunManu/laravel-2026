@@ -13,23 +13,26 @@ class OtpVerificationController extends Controller
     public function store(OtpVerificationRequest $request)
     {
         $data = $request->validated();
-        $userId = $data['user_id'];
-        $cachedOtp = Cache::get("forgot_password_otp_:{$userId}");
+        $email = $request->email;
+        $cachedOtp = Cache::get("forgot_password_otp_:{$email}");
 
         if ($cachedOtp !== $data['otp']) {
             return back()->withErrors(['otp' => 'Invalid or expired OTP']);
         }
 
-        $user = User::find($user_id);
+        $user = User::where('email', $email)->first();
         Auth::login($user);
         $request->session()->regenerate();
+        Log::info('otp verified successfully log');
 
         return redirect()->to('/dashboard');
     }
 
     public function show()
     {
-        Log::debug("verify otp");
-        return view('tenants.verify_otp');
+        Log::debug("verify otp view");
+        return view('tenants.verify_otp', [
+            'email' => request('email')
+        ]);
     }
 }

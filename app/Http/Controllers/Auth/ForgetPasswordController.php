@@ -25,9 +25,11 @@ class ForgetPasswordController extends Controller
         }
 
         $otp = random_int(100000, 999999);
-        Cache::put("forgot_password_otp_:{$user->id}", $otp, now()->addMinutes(10));
+        Cache::put("forgot_password_otp_:{$email}", $otp, now()->addMinutes(10));
         $user->notify(
             new ForgotPasswordNotification($otp)
         );
+
+        return redirect()->route('tenant.otp-verify', ['email' => $email]);
     }
 }
