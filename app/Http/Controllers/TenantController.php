@@ -7,6 +7,7 @@ use App\Http\Requests\TenantCreateRequest;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -31,16 +32,20 @@ class TenantController extends Controller
         ]);
 
         tenancy()->initialize($tenant);
-        User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role' => UserRole::ADMIN->value,
         ]);
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
         tenancy()->end();
 
         return response()->json([
-            'tenant' => $tenant
+            'message' => 'tenant created ' . $tenant['subdomain'],
         ]);
     }
 }

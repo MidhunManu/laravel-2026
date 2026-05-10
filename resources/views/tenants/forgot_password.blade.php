@@ -1,4 +1,4 @@
-<form action="{{ route('tenant.login') }}" method="POST" style="
+<form action="{{ route('tenant.forgot_password') }}" method="POST" style="
     max-width: 420px;
     margin: 40px auto;
     padding: 24px;
@@ -17,24 +17,13 @@
         padding-bottom: 10px;
         color: #222;
     ">
-        Login
+        Forgot Password
     </h2>
-
-    <x-input
-        label="Name"
-        name="name"
-    />
 
     <x-input
         label="Email"
         name="email"
         type="email"
-    />
-
-    <x-input
-        label="Password"
-        name="password"
-        type="password"
     />
 
     <button type="submit" style="
@@ -46,13 +35,7 @@
         font-size: 14px;
         font-family: inherit;
     ">
-        Login
+        Send OTP
     </button>
-    <br><br>
-    <a href="{{ route('forgot_password') }}" style="
-        margin-top: 2px;
-        font-family: inherit;
-        text-decoration: none;
-        ">forgot password</a>
 
 </form>

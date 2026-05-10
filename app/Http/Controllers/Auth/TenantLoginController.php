@@ -18,19 +18,16 @@ class TenantLoginController extends Controller
 
     public function login(TenantLoginRequest $request)
     {
-        $data = $request->validated();
-        Log::debug('tenant.login', [$data]);
+        $credentials = $request->validated();
+        Log::debug('tenant.login', [$credentials]);
 
-        $user = User::where('email', $data['email'])->first();
-
-        if (!$user) {
-            abort(404, 'user not found');
+        if (! Auth::attempt($credentials, true)) {
+            return back()->withErrors([
+                'email' => 'invalid credentials',
+            ])->onlyInput('email');
         }
 
-        if (Hash::check($data['password'], $user['password'])) {
-            Auth::login($user, true);
-            $request->session()->regenerate();
-            return redirect('/dashboard');
-        }
+        $request->session()->regenerate();
+        return redirect()->to('/dashboard');
     }
 }

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Auth\ForgetPasswordController;
 use App\Http\Controllers\Auth\TenantLoginController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -26,9 +27,15 @@ Route::middleware([
 ])->group(function () {
     Route::get('/tenant/login', [TenantLoginController::class, 'loginView'])
         ->name('login');
-        
+
     Route::post('/tenant/login', [TenantLoginController::class, 'login'])
-    ->name('tenant.login');
+        ->name('tenant.login');
+
+    Route::post('/tenant/forgot_password', [ForgetPasswordController::class, 'store'])
+        ->name('tenant.forgot_password');
+
+    Route::get('/tenant/forgot_password', [ForgetPasswordController::class, 'show'])
+        ->name('forgot_password');
 
     Route::middleware('auth')->group(function() {
         Route::get('/dashboard', function () {
