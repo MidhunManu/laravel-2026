@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Auth\ForgetPasswordController;
 use App\Http\Controllers\Auth\TenantLoginController;
+use App\Http\Controllers\OtpVerificationController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -36,7 +37,13 @@ Route::middleware([
 
     Route::get('/tenant/forgot_password', [ForgetPasswordController::class, 'show'])
         ->name('forgot_password');
+    
+    Route::get('/tenant/otp-verify', [OtpVerificationController::class, 'show'])
+        ->name('tenant.otp-verify');
 
+    Route::post('/tenant/otp-verify', [OtpVerificationController::class, 'store'])
+        ->name('tenant.otp-verify');
+    
     Route::middleware('auth')->group(function() {
         Route::get('/dashboard', function () {
             return "dashboard";
