@@ -13,6 +13,9 @@ class TenantLoginController extends Controller
 {
     public function loginView()
     {
+        if (Auth::check()) {
+            return redirect()->to('/dashboard');
+        }
         return view('tenants.login');
     }
 
