@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ValidSubdomain;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -26,7 +27,7 @@ class TenantCreateRequest extends FormRequest
             'name'    => 'string|max:255|required',
             'email'         => 'email|max:255|required',
             'password'      => 'required',
-            'sub_domain'    => 'string|required',
+            'sub_domain'    => ['string','required', new ValidSubdomain],
             'plan'          => 'string',
         ];
     }

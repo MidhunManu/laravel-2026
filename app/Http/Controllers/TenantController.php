@@ -28,7 +28,7 @@ class TenantController extends Controller
             'plan'          => $data['plan'],
         ]);
         $tenant->domains()->create([
-            'domain' => $data['sub_domain'] . 'localhost',
+            'domain' => $data['sub_domain'] . '.localhost',
         ]);
 
         tenancy()->initialize($tenant);
