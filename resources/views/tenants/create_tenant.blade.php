@@ -20,7 +20,6 @@
         Create Tenant
     </h2>
 
-    {{-- 🌟 Global error block --}}
     @if ($errors->any())
         <div style="
             margin-bottom: 16px;
