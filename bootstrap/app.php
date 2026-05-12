@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Stancl\Tenancy\Exceptions\DomainOccupiedByOtherTenantException;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -19,5 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
             return back()->withErrors([
                 'sub_domain' => 'This subdomain is already taken',
             ]);
+        });
+
+        $exceptions->render(function (TenantCouldNotBeIdentifiedOnDomainException $e) {
+            abort(404, "tenant not found");
         });
     })->create();

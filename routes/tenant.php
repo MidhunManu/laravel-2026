@@ -46,7 +46,9 @@ Route::middleware([
     
     Route::middleware('auth')->group(function() {
         Route::get('/dashboard', function () {
-            return "dashboard";
+            return view('dashboard', [
+                'plan' => 'standard',
+            ]);
         });
     });
 });
