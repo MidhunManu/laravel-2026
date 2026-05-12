@@ -1,58 +1,62 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
-```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Resolvedesk
+ 
+A multi-tenant, API-first SaaS helpdesk platform built with Laravel 13 and served via Nginx. Resolvedesk lets businesses onboard to a shared platform, configure their own support environment, and manage customer tickets through a clean REST API — think a self-hosted, backend-only Zendesk.
+ 
+---
+ 
+## What It Does
+ 
+Businesses (tenants) register on the platform and get an isolated workspace at their own subdomain. Within that workspace, admins invite support agents and customers, define SLA policies, and manage the full lifecycle of support tickets — from creation through assignment, resolution, and closure.
+ 
+Everything is exposed as a versioned JSON API. There is no frontend; the API is designed to be consumed by any client: a web SPA, a mobile app, an admin dashboard, or automated tooling.
+ 
+---
+ 
+## Core Features
+ 
+**Multi-tenancy** — Every tenant's data is fully isolated at the application layer. A user from one organisation can never see or interact with another organisation's tickets, agents, or configuration.
+ 
+**Role-based access** — Four roles exist across two scopes. At the platform level, a Super Admin manages tenants. Within each tenant, an Admin configures the workspace, Agents handle tickets, and Customers submit and track their own requests.
+ 
+**Ticket lifecycle** — Tickets move through a defined status graph (`new → open → pending → on_hold → resolved → closed`) with enforced valid transitions. Every state change, reassignment, and edit is written to an immutable audit log.
+ 
+**SLA engine** — Tenants define response and resolution time targets per priority level. The system automatically computes ticket deadlines, tracks first-response timestamps, pauses SLA clocks when tickets are put on hold, and runs a background job every five minutes to detect and flag breaches.
+ 
+**Async notifications** — Emails are never sent inline. All notifications (ticket assignments, agent replies, SLA breaches, report completions) are dispatched as queued jobs through Redis, with automatic retries and failure logging.
+ 
+**Reporting** — A cached dashboard endpoint gives real-time stats on open, overdue, and resolved tickets along with SLA compliance rates. Admins can request full CSV or PDF exports for any date range; these are generated asynchronously and delivered by email.
+ 
+**Webhooks** — Tenants can register outbound webhook endpoints subscribed to specific events. Payloads are signed with HMAC-SHA256, delivery is retried on failure, and a delivery log is kept for debugging.
+ 
+**File attachments** — Agents and customers can attach files to tickets. Files are stored on S3, never publicly accessible by URL, and served via short-lived signed download links.
+ 
+---
+ 
+## Tech Stack
+ 
+| Layer | Technology |
+|---|---|
+| Framework | Laravel 13 |
+| Language | PHP 8.3 |
+| Web server | Nginx + PHP-FPM |
+| Database | MySQL 8.0 |
+| Cache & queues | Redis 7 |
+| Object storage | AWS S3 (S3-compatible) |
+| Auth | Laravel Sanctum (bearer tokens) |
+| Queue monitoring | Laravel Horizon |
+| Process supervisor | Supervisord |
+| OS | Ubuntu 22.04 LTS |
+ 
+---
+ 
+## Project Goals
+ 
+This project is designed as a complete, production-grade learning exercise covering the full surface area of Laravel 13 — routing, middleware, Eloquent ORM, service container, events, queued jobs, caching, Sanctum auth, file storage, form requests, policies, testing, and task scheduling — combined with hands-on Nginx configuration including SSL termination, PHP-FPM integration, rate limiting, security headers, and static asset handling.
+ 
+The accompanying SRS document defines every feature and expected behaviour in detail.
+ 
+---
+ 
+## Status
+ 
+Active development — v1.0 in progress.
